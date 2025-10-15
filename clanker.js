@@ -1,0 +1,66 @@
+<script>
+    let score = 0;
+    let gameActive = true;
+    const molePositions = [
+        {x: -2, z: -3}, {x: 0, z: -3}, {x: 2, z: -3},
+        {x: -2, z: -5}, {x: 0, z: -5}, {x: 2, z: -5}
+    ];
+    
+    function createMole(position) {
+        const gameArea = document.querySelector('#game-area');
+        
+        // Randomly choose box or sphere
+        const isSphere = Math.random() > 0.5;
+        const mole = document.createElement('a-entity');
+        
+        if (isSphere) {
+            mole.setAttribute('geometry', 'primitive: sphere; radius: 0.3');
+            mole.setAttribute('material', 'color: brown');
+        } else {
+            mole.setAttribute('geometry', 'primitive: box; width: 0.5; height: 0.5; depth: 0.5');
+            mole.setAttribute('material', 'color: #8B4513');
+        }
+        
+        // Start underground, then pop up
+        mole.setAttribute('position', `${position.x} -0.5 ${position.z}`);
+        mole.setAttribute('animation', 'property: position; to: ' + position.x + ' 0.3 ' + position.z + '; dur: 500');
+        
+        // Make it clickable
+        mole.setAttribute('cursor-listener', '');
+        mole.classList.add('mole');
+        
+        gameArea.appendChild(mole);
+        
+        // Remove mole after 2 seconds
+        setTimeout(() => {
+            if (mole.parentNode) {
+                mole.remove();
+            }
+        }, 2000);
+    }
+    
+    // Handle mole clicks
+    AFRAME.registerComponent('cursor-listener', {
+        init: function () {
+            this.el.addEventListener('click', () => {
+                score += 10;
+                document.querySelector('#score').setAttribute('value', 'Score: ' + score);
+                this.el.remove();
+            });
+        }
+    });
+    
+    // Spawn moles randomly
+    function spawnMole() {
+        if (gameActive) {
+            const randomPosition = molePositions[Math.floor(Math.random() * molePositions.length)];
+            createMole(randomPosition);
+            
+            // Next mole in 1-3 seconds
+            setTimeout(spawnMole, Math.random() * 2000 + 1000);
+        }
+    }
+    
+    // Start the game
+    setTimeout(spawnMole, 1000);
+</script>
