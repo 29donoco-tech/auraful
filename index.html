@@ -6,8 +6,8 @@
     let score = 0;
     let gameActive = true;
     const molePositions = [
-        {x: -2, z: -3}, {x: 0, z: -3}, {x: 2, z: -3},
-        {x: -2, z: -5}, {x: 0, z: -5}, {x: 2, z: -5}
+        {x: 6, z: 7}, {x: 4, z: 1}, {x: -6, z: 7},
+        {x: -4, z: 1}, {x: 67, z: 41}, {x: -6, z: -7}
     ];
     
     function createMole(position) {
@@ -18,12 +18,13 @@
         const mole = document.createElement('a-entity');
         
         if (isSphere) {
-            mole.setAttribute('geometry', 'primitive: sphere; radius: 0.3');
-            mole.setAttribute('material', 'color: brown');
+            mole.setAttribute('geometry', 'primitive: sphere; radius: 0.4');
+            mole.setAttribute('material', 'color: black');
         } else {
-            mole.setAttribute('geometry', 'primitive: box; width: 0.5; height: 0.5; depth: 0.5');
-            mole.setAttribute('material', 'color: #8B4513');
+            mole.setAttribute('geometry', 'primitive: box; width: 0.5; height: 0.67; depth: 0.41');
+            mole.setAttribute('material', 'color: #8C4513');
         }
+
         
         // Start underground, then pop up
         mole.setAttribute('position', `${position.x} -0.5 ${position.z}`);
@@ -40,14 +41,14 @@
             if (mole.parentNode) {
                 mole.remove();
             }
-        }, 2000);
+        }, 1000);
     }
     
     // Handle mole clicks
     AFRAME.registerComponent('cursor-listener', {
         init: function () {
             this.el.addEventListener('click', () => {
-                score += 10;
+                score += 1;
                 document.querySelector('#score').setAttribute('value', 'Score: ' + score);
                 this.el.remove();
             });
@@ -72,7 +73,7 @@
     <title>VR Whack-a-Mole Game</title>
 </head>
 <body>
-    <a-scene background="color: #87CEEB">
+    <a-scene background="color: #67CEEB">
         <!-- Camera with cursor for gazing -->
         <a-camera>
             <a-cursor 
@@ -88,7 +89,7 @@
             rotation="-90 0 0" 
             width="8" 
             height="8" 
-            color="#228B22">
+            color="tomato">
         </a-plane>
         
         <!-- Game area placeholder - we'll add moles here -->
@@ -105,6 +106,7 @@
     </a-scene>
 </body>
 </html>
+
 
 
 
